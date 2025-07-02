@@ -14,9 +14,7 @@ Un proyecto de ejemplo que implementa las operaciones CRUD (Create, Read, Update
 - ✅ Operaciones CRUD completas
 - ✅ API RESTful
 - ✅ Base de datos MYSQL
-- ✅ Validación de datos
 - ✅ Manejo de excepciones
-- ✅ Documentación con Swagger
 
 ## 🛠 Tecnologías Utilizadas
 
