@@ -1,6 +1,7 @@
 package com.example.crud.service;
 
 import com.example.crud.entity.Customer;
+import com.example.crud.exception.ResourceNotFoundException;
 import com.example.crud.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findById(Integer id) {
-        return customerRepository.findById(id).get();
+        Customer customer = customerRepository.findById(id).orElseThrow(
+                ()-> {
+                    throw new ResourceNotFoundException("Customer not found with id " + id);
+                }
+        );
+        //return customerRepository.findById(id).get();
+        return customer;
     }
 
     @Override
