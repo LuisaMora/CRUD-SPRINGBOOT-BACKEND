@@ -14,11 +14,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-// Extiende ResponseEntityExceptionHandler para un manejo de errores más fácil de Spring MVC
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // Manejador para ResourceNotFoundException
+    //Se activa cuando el servicio
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleExceptionNotFoundException(ResourceNotFoundException ex, WebRequest webRequest) {
         ErrorDetails error = new ErrorDetails(
@@ -30,7 +29,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    // Nuevo manejador para errores de validación de @Valid
+
+    //
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
@@ -40,23 +40,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
 
-        // También puedes construir un ErrorDetails personalizado si prefieres
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
-                "Validation Failed", // Un mensaje general para la validación
+                "Validation Failed",
                 request.getDescription(false),
-                "BAD_REQUEST" // O VALIDATION_ERROR, o el que prefieras
+                "BAD_REQUEST"
         );
 
-        // Podrías agregar los 'errors' (mapa) dentro de ErrorDetails si modificas la clase ErrorDetails
-        // Por ahora, devolveremos un ResponseEntity con el mapa de errores en el cuerpo
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-        // O si quieres mantener el formato de ErrorDetails y incluir los mensajes,
-        // tendrías que modificar ErrorDetails para que acepte un mapa o lista de errores.
-        // Por ejemplo, añadiendo List<String> details; o Map<String, String> validationErrors;
     }
 
-    // Manejador genérico para cualquier otra excepción no controlada
+
+    //
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception ex, WebRequest webRequest) {
         ErrorDetails error = new ErrorDetails(
