@@ -2,6 +2,9 @@ package com.example.crud.controller;
 
 import com.example.crud.entity.Customer;
 import com.example.crud.service.CustomerService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +19,9 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public Customer save(@RequestBody Customer customer) {
-        return customerService.save(customer);
+    public ResponseEntity<Customer> createCustomer (@Valid @RequestBody Customer customer) {
+        Customer savedCustomer = customerService.save(customer);
+        return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -26,8 +30,10 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Customer finById(@PathVariable Integer id) {
-        return customerService.findById(id);
+    public ResponseEntity<Customer> finById(@PathVariable Integer id, @Valid @RequestBody Customer customer) {
+        customer.setId(id);
+        Customer updatedCustomer = customerService.update(customer);
+        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
